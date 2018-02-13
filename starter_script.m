@@ -6,9 +6,10 @@ TEST = 0;
 VERBOSE = 0;
 
 addpath('runpars','poscond','measures','debug','utils','compressors');
+currpwd = pwd;
 cd ..
 addpath('utils_matlab','dsl')
-cd cad-gas
+cd(currpwd) 
 
 allconfigs('reset');
 

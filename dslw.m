@@ -4,9 +4,10 @@ try
     d = evalin('base','datavar');
     r = evalin('base','runparsd');
 catch
+    currpwd = pwd;
     cd ..
     addpath('utils_matlab','dsl')
-    cd cad-gas
+    cd(currpwd)
     [d,r] = dsl;
     assignin('base','datavar',d)
     assignin('base','runparsd',r)

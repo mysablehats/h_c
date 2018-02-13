@@ -1,4 +1,5 @@
 function [ss, metrics] = plotconfmaker(ss, metrics,whatIlabel)
+%% will this make any difference?
 ss.figset = {}; %% you should clear the set first if you want to rebuild them
 dbgmsg('Displaying multiple confusion matrices for GWR and GNG for nodes:',num2str(labindex),0)
 

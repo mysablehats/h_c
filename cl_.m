@@ -1,4 +1,4 @@
-function [outcomes, cacc, time] = starter_script(varargin)
+function [outcomes, cacc, time] = cl_(varargin)
 myticvar = tic;
 
 global VERBOSE LOGIT TEST

@@ -121,7 +121,7 @@ for j = whatIlabel
             %%% now, i believe i had this problem before, so i believe
             %%% there is in my code this function, but I can't seem to find
             %%% it, so coding it again
-            ssvot.gas(j).class = double(fromnumstological(weirdthingy, size(ssvot.y,1))); %%% although I liked how it was and it was saving me so much space, confmatrix does not like logicals (it seems to me that it would be the ideal place to use them, but well, i didnt code matlab)
+            ssvot.gas(j).class = full(ind2vec(weirdthingy, size(ssvot.y,1))); %%% although I liked how it was and it was saving me so much space, confmatrix does not like logicals (it seems to me that it would be the ideal place to use them, but well, i didnt code matlab)
             
             %%% demonstration that what we wanted to do is sound: uncomment
             %%% to run

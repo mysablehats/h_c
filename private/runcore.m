@@ -2,26 +2,15 @@ function simvar = runcore(simvar,datavar)
 a = [];
 b = [];
 
-switch simvar.method
-    case 'gas'
-    met_struc = struct('conffig',[],'val',[],'train',[], 'accumulatedepochs',0);
-    
-    for i =1:length(datavar)
-        datavar(i).data = structcat2(makess(simvar.numlayers,true),datavar(i).data);
-    end
-    
-    for ii = 1:length(simvar)
-        simvar(ii).metrics =repmat(met_struc,length(datavar),simvar.numlayers);
-    end
-    case 'knn'
-    case 'kforget'
-    case 'svm'
-        
-    case '???'
-    otherwise
-        error('classification method not defined. ')
+met_struc = struct('conffig',[],'val',[],'train',[], 'accumulatedepochs',0);
+
+for i =1:length(datavar)
+    datavar(i).data = structcat2(makess(simvar.numlayers,true),datavar(i).data);
 end
 
+for ii = 1:length(simvar)
+    simvar(ii).metrics =repmat(met_struc,length(datavar),simvar.numlayers);
+end
 
 for ii = 1:length(simvar)
     starttime = tic;

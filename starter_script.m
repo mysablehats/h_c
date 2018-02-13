@@ -5,7 +5,7 @@ global VERBOSE LOGIT TEST
 TEST = 0;
 VERBOSE = 0;
 
-addpath('runpars','poscond','measures','debug','utils','compressors');
+addpath('runpars')%,'poscond','measures','debug','utils');
 currpwd = pwd;
 cd ..
 addpath('utils_matlab','dsl')

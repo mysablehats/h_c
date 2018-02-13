@@ -6,13 +6,11 @@ classdef Simvar
         realtimeclassifier
         MAX_NUM_TRIALS
         MAX_RUNNING_TIME
-        method
         excfun
         model
     end
     methods
         function simvar = Simvar(varargin)
-            simvar.method = '';
             simvar.excfun = '';
             
             simvar.realtimeclassifier = false;

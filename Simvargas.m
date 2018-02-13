@@ -15,7 +15,6 @@ classdef Simvargas < Simvar
             simvar = simvar@Simvar(varargin{:});
             
             %% Post initialization
-            simvar.method = 'gas';
             %simvar.excfun = @(data,ii)executioncore_in_starterscript(simvar(ii).arq_connect, data); %useless to set here, since arq_connect is empty! 
             simvar.allconn = [];
             

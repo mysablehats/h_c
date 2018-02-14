@@ -30,7 +30,7 @@ if isempty(allc_store)
     
     %%% sets the running parameters for the classifier.
     
-    allc.simvar.init = {'PARA' 1};
+    allc.simvar.init = {'PARA' 0};
     
     allc.simvar.NODES_VECT = [35];
     allc.simvar.MAX_EPOCHS_VECT = [1];

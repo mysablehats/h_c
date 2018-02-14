@@ -1,8 +1,8 @@
 function [actionstructure,flag_set] = complicated_concatenator(actionstructure,m,shortdim,q,r,p,flag_set)
 
     for j = 1:1+p:actionstructure.end
-        a = zeros(shortdim*q,1);
-        indexx = zeros(1,q);
+        a = zeros(shortdim*q,1,class(actionstructure.pose));
+        indexx = zeros(1,q,class(actionstructure.index));
         dist = 0;
         sizeofchunk = j+q*r-1;
         if sizeofchunk>actionstructure.end

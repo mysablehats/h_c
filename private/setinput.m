@@ -179,10 +179,10 @@ for i = 1:length(actionstructure)
     end
     %should concatenate long now
     actionstructure(i).newend = length(actionstructure(i).long);
-    actionstructure(i).longinput = zeros(q*shortdim,actionstructure(i).newend);
+    actionstructure(i).longinput = zeros(q*shortdim,actionstructure(i).newend,class(actionstructure(i).long(1).vec));
     actionstructure(i).longy = repmat(actionstructure(i).y,1,actionstructure(i).newend);
-    actionstructure(i).longindex = zeros(q,size(actionstructure(i).longy,2));
-    actionstructure(i).longdist = zeros(1,size(actionstructure(i).longy,2)); 
+    actionstructure(i).longindex = zeros(q,size(actionstructure(i).longy,2),class(actionstructure(i).long(1).index));
+    actionstructure(i).longdist = zeros(1,size(actionstructure(i).longy,2),class(actionstructure(i).long(1).dist)); 
     for j = 1:actionstructure(i).newend
         actionstructure(i).longinput(:,j) = actionstructure(i).long(j).vec;
         actionstructure(i).longindex(:,j) = actionstructure(i).long(j).index;

@@ -17,6 +17,15 @@ dbgmsg('Working on : ''',sstgasj.name,''' (', num2str(j),') with method: ',sstga
 
 [sstv.gas(j).inputs.input_clip, sstv.gas(j).inputs.input, sstv.gas(j).inputs.input_ends, sstv.gas(j).y, sstv.gas(j).inputs.oldwhotokill, sstv.gas(j).inputs.index, sstv.gas(j).inputs.awk, sstv.gas(j).distances(k,:)]  = setinput(arq_connect, sstgas, dimdim, sstv,k); %%%%%%
 
+%% applying whatever function to it
+if strcmp(vot, 'train')
+    dbgmsg('applying conditioning functions to training set')
+    sstv.gas(j).inputs.input_clip = cond_inp(sstv.gas(j).inputs.input_clip,arq_connect.input_cond{1});
+end
+if strcmp(vot, 'val')
+    dbgmsg('applying conditioning functions to validation set')
+    sstv.gas(j).inputs.input_clip = cond_inp(sstv.gas(j).inputs.input_clip,arq_connect.input_cond{2});
+end
 %%
 % After setting the input, we can actually run the gas, either a GNG or the
 % GWR function we wrote.

@@ -6,14 +6,15 @@ for i = 1:length(allconn)
     arq_connect(i).name = allconn{i}{1};
     arq_connect(i).method = allconn{i}{2};
     arq_connect(i).sourcelayer = allconn{i}{3};
-    arq_connect(i).layertype = allconn{i}{4};
-    arq_connect(i).q = allconn{i}{5};
-    arq_connect(i).params = allconn{i}{6};
+    arq_connect(i).input_cond = allconn{i}{4};
+    arq_connect(i).layertype = allconn{i}{5};
+    arq_connect(i).q = allconn{i}{6};
+    arq_connect(i).params = allconn{i}{7};
     %%% hack I need this info in params as well
     arq_connect(i).params.q = arq_connect(i).q;
     %% sets the right labelling function for layer:
-    parsc = allconn{i}{8};
-    arq_connect(i).inputtype = allconn{i}{9};
+    parsc = allconn{i}{9};
+    arq_connect(i).inputtype = allconn{i}{10};
     
     
     
@@ -27,12 +28,12 @@ for i = 1:length(allconn)
         skelldef = arq_connect(i).params.skelldef;
         idx = flipindexes(skelldef,q,layertype);
         
-        switch allconn{i}{7}
+        switch allconn{i}{8}
             case 'knn'
                 if isempty(parsc.knn.other)
-                    arq_connect(i).params.label.classlabelling = eval(['@(x,y)fitcknn(x,y,''NumNeighbors'', ' num2str(allconn{i}{10}) ')']);
+                    arq_connect(i).params.label.classlabelling = eval(['@(x,y)fitcknn(x,y,''NumNeighbors'', ' num2str(allconn{i}{11}) ')']);
                 else
-                    arq_connect(i).params.label.classlabelling = eval(['@(x,y)fitcknn(x,y,''NumNeighbors'', ' num2str(allconn{i}{10}) ',' parsc.knn.other{:} ')']);
+                    arq_connect(i).params.label.classlabelling = eval(['@(x,y)fitcknn(x,y,''NumNeighbors'', ' num2str(allconn{i}{11}) ',' parsc.knn.other{:} ')']);
                 end
             case 'svm'
                 
@@ -43,11 +44,11 @@ for i = 1:length(allconn)
                 end
             otherwise
                 warning('name of function not found. will assume it is a matlab function name or function handle')
-                if strfind(allconn{i}{7},'@')
-                    disp(['Using function handle' allconn{i}{7} ' for labelling'])
-                    arq_connect(i).params.label.classlabelling = allconn{i}{7};
+                if strfind(allconn{i}{8},'@')
+                    disp(['Using function handle' allconn{i}{8} ' for labelling'])
+                    arq_connect(i).params.label.classlabelling = allconn{i}{8};
                 else
-                    arq_connect(i).params.label.classlabelling = eval(['@' allconn{i}{7}]);
+                    arq_connect(i).params.label.classlabelling = eval(['@' allconn{i}{8}]);
                 end
         end
     end

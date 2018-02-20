@@ -6,6 +6,8 @@ function [ oups, oy ] = cond_inp( inps,iy, conds, skelldef )
 %   required by cipittelli's classifier and for angle preserving flipping
 %   of skeleton sequences. 
 confuns = [];
+oups = inps;
+oy = iy;
 for i = 1:length(conds)
     switch conds{i}
         case 'ms'

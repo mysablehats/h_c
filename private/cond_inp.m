@@ -44,28 +44,29 @@ for j = confuns
             [inp(:,k),out(k)] = j{:}(inps.input(:,k),skelldef);
         end
         inpC = inp;
-        for ii = 1:size(inps.input,2) 
-            ihca(ii,:) = out(ii).initialhipchestangle;
-            ehca(ii,:) = out(ii).endhipchestangle;
-            iha(ii,:) = out(ii).initialheadangle;
-            eha(ii,:) = out(ii).endheadangle;      
-            ehcar(ii,:) = out(ii).endhipchestanglerho;
-            ehar(ii,:) = out(ii).endheadanglerho;     
+        if 0
+            for ii = 1:size(inps.input,2)
+                ihca(ii,:) = out(ii).initialhipchestangle;
+                ehca(ii,:) = out(ii).endhipchestangle;
+                iha(ii,:) = out(ii).initialheadangle;
+                eha(ii,:) = out(ii).endheadangle;
+                ehcar(ii,:) = out(ii).endhipchestanglerho;
+                ehar(ii,:) = out(ii).endheadanglerho;
+            end
+            a = vec2ind(iy);
+            figure
+            scatter3(ihca(:,1), ihca(:,2), ihca(:,3),2,a )
+            hold on
+            scatter3(iha(:,1), iha(:,2), iha(:,3),2,a )
+            figure
+            scatter3(ehca(:,1), ehca(:,2), ehca(:,3),2,a )
+            hold on
+            scatter3(eha(:,1), eha(:,2), eha(:,3),2,a )
+            figure
+            scatter3(ehcar(:,1), ehcar(:,2), ehcar(:,3),2,a )
+            hold on
+            scatter3(ehar(:,1), ehar(:,2), ehar(:,3),2,a )
         end
-        a = vec2ind(iy);
-        figure
-        scatter3(ihca(:,1), ihca(:,2), ihca(:,3),2,a )
-        hold on
-        scatter3(iha(:,1), iha(:,2), iha(:,3),2,a )
-        figure
-        scatter3(ehca(:,1), ehca(:,2), ehca(:,3),2,a )
-        hold on
-        scatter3(eha(:,1), eha(:,2), eha(:,3),2,a )
-        figure
-        scatter3(ehcar(:,1), ehcar(:,2), ehcar(:,3),2,a )
-        hold on
-        scatter3(ehar(:,1), ehar(:,2), ehar(:,3),2,a )
-        
     else
         warning('check if input and input_clip are both necessary. this function is performing actions on both and could run twice as fast if only one of that needs to be conditioned.')
         inp = zeros(size(inps.input));

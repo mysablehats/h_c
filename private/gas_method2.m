@@ -8,6 +8,7 @@ sstgasj.name = arq_connect.name;
 sstgasj.method = arq_connect.method;
 sstgasj.layertype = arq_connect.layertype;
 arq_connect.params.layertype = arq_connect.layertype;
+arq_connect.params.skelldef.currlayer = arq_connect.layertype; %%% i am copying this everywhere, i should probably put it in a more convinient place. also this is also being overwritten now 
 
 %% Choosing the right input for this layer
 % This calls the function set input that chooses what will be written on the .inputs variable. It also handles the sliding window concatenations and saves the .input_ends properties, so that this can be done recursevely.

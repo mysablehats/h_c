@@ -104,7 +104,7 @@ if doIdraw
     if markers
         for ll = 1:2            
             pp = plot3(tdskel(:,1,ll), tdskel(:,2,ll), tdskel(:,3,ll),'.y','markersize',15); view(0,0); axis equal;            
-            for k=1:25 % I used this to make the drawings, but now I think it looks cool and I don't want to remove it
+            for k=1:size(tdskel,1) % I used this to make the drawings, but now I think it looks cool and I don't want to remove it
                 text(tdskel(k,1,ll), tdskel(k,2,ll), tdskel(k,3,ll),num2str(k))
             end
         end

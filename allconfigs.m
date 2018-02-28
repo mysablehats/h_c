@@ -34,6 +34,7 @@ if isempty(allc_store)
     
     allc.simvar.NODES_VECT = [35];
     allc.simvar.MAX_EPOCHS_VECT = [1];
+    allc.simvar.ARCH_VECT = [29];
     
     allc.simvar.MAX_NUM_TRIALS = 1;
     allc.simvar.MAX_RUNNING_TIME = 1;%3600*10; %%% in seconds, will stop after this

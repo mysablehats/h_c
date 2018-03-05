@@ -113,7 +113,16 @@ for j = whatIlabel
         if isfield(ssvot,'gas')&&j<=length(ssvot.gas)
             [~,newlabels] = max(gas(j).nodesl);
             gas(j).model =  arq_connect(j).params.label.classlabelling(gas(j).nodes.', newlabels.'); %%% I will use knn for now, but it doesnt need to be, so this is a function handle to fitcknn
-            weirdthingy = predict(gas(j).model,ssvot.gas(j).inputs.input.'  ).';            %%% we still dont have the classes the way we want because matlab is annoying 
+            %%%%%%%% wait, this is maybe 2 classifiers per layer if we already are doing the bestmatching! why? do
+            %%%%%%%% we even gain anything from it?
+            %%%%%%%% I will break the distances for multiple gas non-sense
+            %%%%%%%% that I am not using anymore, since once that is
+            %%%%%%%% redone, we have to also remove the double classifier!
+            
+            [weirdthingy, score] = predict(gas(j).model,ssvot.gas(j).inputs.input.'  );            %%% we still dont have the classes the way we want because matlab is annoying 
+            %i should set the distances, shouldn't I? not even for the KNN
+            ssvot.gas.distances = sum(score.');
+            weirdthingy = weirdthingy.';
             if ~isfield(ssvot.gas(j), 'bestmatchbyindex')||isempty(ssvot.gas(j).bestmatchbyindex)
                 warning('bestmatch by index is not set!!! .IDX property will be empty as well!')
             end

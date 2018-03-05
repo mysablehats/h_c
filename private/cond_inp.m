@@ -1,4 +1,4 @@
-function [ oups, oy ] = cond_inp( inps,iy, conds, skelldef )
+function [ oups, oy, odist ] = cond_inp( inps,iy, idist, conds, skelldef )
 %cond_inp Conditions input data for each layer of the classifier
 %   This function is supposed to read arq_conn and go through all the
 %   conditioning arguments and apply them to the input after it is
@@ -8,11 +8,13 @@ function [ oups, oy ] = cond_inp( inps,iy, conds, skelldef )
 confuns = [];
 oups = inps;
 oy = iy;
+odist = idist;
 for i = 1:length(conds)
     switch conds{i}
         case 'ms'
             confuns{i} = @mirrorsagittal; 
             oy = [iy iy];
+            odist = [idist idist];
             oups.input_ends = [inps.input_ends inps.input_ends];
             if ~isempty(inps.oldwhotokill)
                 error('Oldwhotokill is being used and the sagittal mirroring was not prepared to deal with it. It is probably just a matter of repeating the indexes with an offset, but this was not implemented and the algorithm will fail.')

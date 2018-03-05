@@ -21,11 +21,11 @@ dbgmsg('Working on : ''',sstgasj.name,''' (', num2str(j),') with method: ',sstga
 %% applying whatever function to it
 if strcmp(vot, 'train')
     dbgmsg('applying conditioning functions to training set')
-    [sstv.gas(j).inputs, sstv.gas(j).y] = cond_inp(sstv.gas(j).inputs,sstv.gas(j).y ,arq_connect.input_cond{1}, arq_connect.params.skelldef  );
+    [sstv.gas(j).inputs, sstv.gas(j).y, sstv.gas(j).distances] = cond_inp(sstv.gas(j).inputs,sstv.gas(j).y, sstv.gas(j).distances ,arq_connect.input_cond{1}, arq_connect.params.skelldef  );
 end
 if strcmp(vot, 'val')
     dbgmsg('applying conditioning functions to validation set')
-    [sstv.gas(j).inputs, sstv.gas(j).y]= cond_inp(sstv.gas(j).inputs,sstv.gas(j).y ,arq_connect.input_cond{2}, arq_connect.params.skelldef  );
+    [sstv.gas(j).inputs, sstv.gas(j).y, sstv.gas(j).distances]= cond_inp(sstv.gas(j).inputs,sstv.gas(j).y, sstv.gas(j).distances ,arq_connect.input_cond{2}, arq_connect.params.skelldef  );
 end
 %%
 % After setting the input, we can actually run the gas, either a GNG or the

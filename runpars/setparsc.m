@@ -16,8 +16,19 @@ switch argarg
         parsc = repmat(parsc,allc.parsc.maxlayernums,1);
         %%% insert custom definitions for each layer below here
         %with dynamicfields this will work.
-        warning('Dynamic fields for setting parscN is not implemented. Fix this if things go wrong. Layers might not do what you believe they should. ')
-        parsc(1).knn.other = allc.parsc1.knn.other;
-        %parsc(2).knn.other = {'''Distance'',@dtw_wrapper'};
-        parsc(2).svm.kernel = allc.parsc2.svm.kernel;
+        dbgmsg('Dynamic fields for setting parscN is not yet tested. Fix this if things go wrong. Layers might not do what you believe they should. ')
+        for i = 1:allc.parsc.maxlayernums
+            dynfield = ['parsc' num2str(i)];
+            if isfield(allc, dynfield)
+                if isfield(allc.(dynfield), 'knn')&&isfield( allc.(dynfield).knn, 'other')
+                    dbgmsg(['Found custom knn definition for layer:' num2str(i)])
+                    parsc(i).knn.other = allc.(dynfield).knn.other;
+                end
+                if isfield(allc.(dynfield), 'svm')&&isfield(allc.(dynfield).svm, 'kernel')
+                    dbgmsg(['Found custom svm kernel definition for layer:' num2str(i)])
+                    %parsc(2).knn.other = {'''Distance'',@dtw_wrapper'};
+                    parsc(i).svm.kernel = allc.(dynfield).svm.kernel;
+                end
+            end
+        end
 end

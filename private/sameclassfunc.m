@@ -118,7 +118,7 @@ for j = whatIlabel
             %%%%%%%% I will break the distances for multiple gas non-sense
             %%%%%%%% that I am not using anymore, since once that is
             %%%%%%%% redone, we have to also remove the double classifier!
-            
+            dbgmsg('Predicting based on model. This may take a while')
             [weirdthingy, score] = predict(gas(j).model,ssvot.gas(j).inputs.input.'  );            %%% we still dont have the classes the way we want because matlab is annoying 
             %i should set the distances, shouldn't I? not even for the KNN
             ssvot.gas.distances = sum(score.');

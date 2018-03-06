@@ -53,13 +53,17 @@ if isempty(allc_store)
     allc.parsc.svm.other = {};
     
     %%%% layerdefs
+    %%%%%%%%%%%%%%% attention! this will overwrite your definitions before,
+    %%%%%%%%%%%%%%% so we aware of it, or your code won't run the networks
+    %%%%%%%%%%%%%%% you want it to run!
     % this is problematic, but I will fix it when the problem comes
     allc.parsc.maxlayernums = 10;
     %%% insert custom definitions for each layer below here
-    allc.parsc1.knn.other = {};
+    %comment out things you don't want to do. 
+    %allc.parsc1.knn.other = {};
     %allc.parsc1.knn.other = {'''Distance'',@(X,Y)flipper(idx,X,Y)'};
     %parsc2.knn.other = {'''Distance'',@dtw_wrapper'};
-    allc.parsc2.svm.kernel = '''gaussian''';
+    %allc.parsc2.svm.kernel = '''gaussian''';
     
     %% parsk
     

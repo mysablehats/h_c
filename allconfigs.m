@@ -41,12 +41,21 @@ if isempty(allc_store)
     
     %% parsc - setparsc
     
+    % Loaded in baq.m:
+    % 
+    % variables that can be specified in distance/kernel functions are:     
+    %       layertype = arq_connect(i).layertype;
+    %       q = arq_connect(i).q;
+    %       skelldef = arq_connect(i).params.skelldef;
+    %       idx = flipindexes(skelldef,q,layertype);
+    
     %%%% init
     %%% for knn
     allc.parsc.knn.k = 1; % default value
-    allc.parsc.knn.other = {'''OptimizeHyperparameters'',''auto'',''HyperparameterOptimizationOptions'',struct(''AcquisitionFunctionName'',''expected-improvement-plus'')'};
+    %   allc.parsc.knn.other = {'''OptimizeHyperparameters'',''auto'',''HyperparameterOptimizationOptions'',struct(''AcquisitionFunctionName'',''expected-improvement-plus'')'};
     %   allc.parsc.knn.other = {'''Distance'',''hamming'''}; %use a hamming distance because pose 1 and 13 differ as much as 1 and 2
     %   allc.parsc.knn.other = {'''Distance'',@dtw'};
+    allc.parsc.knn.other = {'''Distance'',@(X,Y)graph_dist_wrapper(skelldef,X,Y)'};
     %%% for svm
     %   allc.parsc.svm.kernel = 'linear';
     allc.parsc.svm.kernel = '''gaussian''';

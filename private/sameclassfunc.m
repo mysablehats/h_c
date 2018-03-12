@@ -121,7 +121,11 @@ for j = whatIlabel
             dbgmsg('Predicting based on model. This may take a while')
             [weirdthingy, score] = predict(gas(j).model,ssvot.gas(j).inputs.input.'  );            %%% we still dont have the classes the way we want because matlab is annoying 
             %i should set the distances, shouldn't I? not even for the KNN
-            ssvot.gas.distances = sum(score.');
+            try
+                ssvot.gas.distances = sum(score.');
+            catch
+                warning('Distances not set. ')
+            end
             weirdthingy = weirdthingy.';
             if ~isfield(ssvot.gas(j), 'bestmatchbyindex')||isempty(ssvot.gas(j).bestmatchbyindex)
                 warning('bestmatch by index is not set!!! .IDX property will be empty as well!')

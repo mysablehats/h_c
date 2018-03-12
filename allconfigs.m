@@ -32,9 +32,9 @@ if isempty(allc_store)
     
     allc.simvar.init = {'PARA' 0};
     
-    allc.simvar.NODES_VECT = [35];
-    allc.simvar.MAX_EPOCHS_VECT = [1];
-    allc.simvar.ARCH_VECT = [27];
+    allc.simvar.NODES_VECT = [100];
+    allc.simvar.MAX_EPOCHS_VECT = [5];
+    allc.simvar.ARCH_VECT = [31];
     
     allc.simvar.MAX_NUM_TRIALS = 1;
     allc.simvar.MAX_RUNNING_TIME = 1;%3600*10; %%% in seconds, will stop after this
@@ -52,10 +52,11 @@ if isempty(allc_store)
     %%%% init
     %%% for knn
     allc.parsc.knn.k = 1; % default value
+    allc.parsc.knn.other = {};
     %   allc.parsc.knn.other = {'''OptimizeHyperparameters'',''auto'',''HyperparameterOptimizationOptions'',struct(''AcquisitionFunctionName'',''expected-improvement-plus'')'};
     %   allc.parsc.knn.other = {'''Distance'',''hamming'''}; %use a hamming distance because pose 1 and 13 differ as much as 1 and 2
     %   allc.parsc.knn.other = {'''Distance'',@dtw'};
-    allc.parsc.knn.other = {'''Distance'',@(X,Y)graph_dist_wrapper(skelldef,X,Y)'};
+    %allc.parsc.knn.other = {'''Distance'',@(X,Y)graph_dist_wrapper(skelldef,X,Y)'};
     %%% for svm
     %   allc.parsc.svm.kernel = 'linear';
     allc.parsc.svm.kernel = '''gaussian''';
@@ -367,6 +368,14 @@ allconn_set = {...
     }...
     {...%%%% ARCHITECTURE 29
     {'gwr1layer',   'knn',{'pos'},{{'ms'},{'ms'}},                    'pos',[useroptions.w 0],parsk(1),'knn',parsc(1),'nodes',useroptions.k}...
+    }...
+    {... %%%% ARCHITECTURE 30
+    {'gwr1layer',   'gwr',{'pos'},{{},{}},                    'pos',[1 0],parsk(1),'knn',parsc(1),'nodes',useroptions.k}...
+    {'knn2layer',   'knn',{'gwr1layer'},{{'rd'},{}},              'pos',[useroptions.w 0],parsk(2),'knn',parsc(2),'indexes',useroptions.k}...
+    }...
+    {... %%%% ARCHITECTURE 31
+    {'gwr1layer',   'gwr',{'pos'},{{},{}},                    'pos',[1 0],parsk(1),'knn',parsc(1),'nodes',useroptions.k}...
+    {'knn2layer',   'knn',{'gwr1layer'},{{'rd'},{}},              'pos',[useroptions.w 0],parsk(2),'svm',parsc(2),'indexes',useroptions.k}...
     }...
     };
 

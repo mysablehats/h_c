@@ -97,8 +97,24 @@ function [inpk,out] = mirrorsagittal(inpk,skelldef)
 [inpks,out] =cond_MS_(reshape(inpk,[],3),skelldef);
  inpk = reshape(inpks,[],1);
 end
-function inpk = removedoubled(inpk,skelldef)
-error('not implemented yet')
+function [outk, out] = removedoubled(inpk,skelldef)
+out = nan;
+outk(1) = inpk(1);
+j = 1;
+for i = 2:length(inpk)
+    if inpk(i)~=outk(end)
+        j = j+1;
+        outk(j) = inpk(i);
+    end
+end
+%%% so that we have all completely filled vectors
+fillermat = repmat(outk(end),length(inpk)-length(outk),1);
+try
+outk = [outk.';fillermat];
+catch
+    disp('hi')
+end
+%error('not implemented yet')
 end
 
 

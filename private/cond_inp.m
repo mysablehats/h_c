@@ -31,6 +31,10 @@ for i = 1:length(conds)
             oups.awk = inps.awk;
         case 'rd'
             confuns{i} = @removedoubled;
+            skelldef.repeat = 'last';
+        case 'rds'
+            confuns{i} = @removedoubled;
+            skelldef.repeat = 'zeros';
         otherwise
             error('wrong argument in cond_inpu: unrecognized conditioning procedure')
     end
@@ -107,8 +111,15 @@ for i = 2:length(inpk)
         outk(j) = inpk(i);
     end
 end
+switch skelldef.repeat
+    case 'zeros'
+        repm = 0;
+    case 'same'
+        repm = outk(end);
+end 
+
 %%% so that we have all completely filled vectors
-fillermat = repmat(outk(end),length(inpk)-length(outk),1);
+fillermat = repmat(repm,length(inpk)-length(outk),1);
 try
 outk = [outk.';fillermat];
 catch

@@ -39,10 +39,7 @@ switch arq_connect.method
             [sstgasj.nodes, sstgasj.edges, sstgasj.outparams, sstgasj.gasgas] = gas_wrapper(sstv.gas(j).inputs.input_clip,arq_connect);
             %%%% POS-MESSAGE
             dbgmsg('Finished working on gas: ''',sstgasj.name,''' (', num2str(j),') with method: ',sstgasj.method ,'.Num of nodes reached:',num2str(sstgasj.outparams.graph.nodesvect(end)),' for process:',num2str(labindex),0)
-            
-        end
-        
-        
+        end               
         %% Best-matching units
         % The last part is actually finding the best matching units for the gas.
         % This is a simple procedure where we just find from the gas units (nodes
@@ -62,7 +59,15 @@ switch arq_connect.method
         warning('maybe undefined variables')
     case 'knn'
         sstgasj.nodes = sstv.gas(j).inputs.input_clip;
-        warning('maybe undefined variables')
+        warning('maybe undefined variables')     
+    case 'kme'
+         dbgmsg('Running K-means algorithm with ', num2str(arq_connect.params.nodes),' nodes.',1)
+         [ sstv.gas(j).bestmatchbyindex(k,:), nodesnodes, ~,  distdist ] = kmeans(sstv.gas(j).inputs.input_clip.', arq_connect.params.nodes  );
+         sstgasj.nodes = nodesnodes.';
+         sstv.gas(j).distances(k,:) = min(distdist.');
+         %[ sstv.gas(j).bestmatchbyindex(k,:), sstgasj.nodes, ~, distdist ] = kmeans(sstv.gas(j).inputs.input_clip.', arq_connect.params.nodes  );
+    otherwise
+        error('method nod defined.')
 end
 
 %% Post-conditioning function

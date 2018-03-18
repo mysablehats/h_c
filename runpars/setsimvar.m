@@ -1,7 +1,13 @@
 function simvar = setsimvar(params,parsc,useroptions)
 allc = allconfigs;
 simvar = Simvargas(allc.simvar.init);
-simvar.NODES_VECT = allc.simvar.NODES_VECT;
+if isfield(useroptions, 'n')
+    dbgmsg('defining number of nodes based on user input:', num2str(useroptions.n))
+    simvar.NODES_VECT = useroptions.n;
+else
+    dbgmsg('defining number of nodes based on configuration files:', num2str(allc.simvar.NODES_VECT))
+    simvar.NODES_VECT = allc.simvar.NODES_VECT;
+end 
 simvar.MAX_EPOCHS_VECT = allc.simvar.MAX_EPOCHS_VECT;
 simvar.ARCH_VECT = allc.simvar.ARCH_VECT;
 simvar.MAX_NUM_TRIALS = allc.simvar.MAX_NUM_TRIALS;

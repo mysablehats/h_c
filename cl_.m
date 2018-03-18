@@ -25,16 +25,19 @@ scene = runparsd.scene;
 maxindexofscenes = length(runparsd.scene);
 
 %%% this is a switch
-if nargin==2
+switch nargin 
+    case 3
     useroptions.k = varargin{1};
     useroptions.w = varargin{2};
-end
-if nargin==1
+    useroptions.n = varargin(3);
+    case 2
+    useroptions.k = varargin{1};
+    useroptions.w = varargin{2};
+    case 1
     useroptions.k = varargin{1};
     useroptions.w = 1;
     warning('Size of window not defined. Using 1. ')
-end
-if nargin==0
+    case 0 
     useroptions.k = 1;
     warning('Number of neigbours not defined. Using 1. ')
     useroptions.w = 1;

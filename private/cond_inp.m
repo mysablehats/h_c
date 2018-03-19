@@ -54,10 +54,10 @@ end
 skelldef.ic = @inv_core;
 for j = confuns
     dbgmsg(['Applying ' j ' to input'])
-    if isequal(inps.input,inps.input_clip)
-        inp = zeros(size(inps.input));
-        [~,outf] = j{:}(inps.input(:,1),skelldef);
+    if isequal(inps.input,inps.input_clip)        
+        [inpf,outf] = j{:}(inps.input(:,1),skelldef);
         out = repmat(outf,size(inps.input,2),1);
+        inp = zeros(size(inpf,1),size(inps.input,2));
         for k = 1:size(inp,2) % check it
             [inp(:,k),out(k)] = j{:}(inps.input(:,k),skelldef);
         end
@@ -87,9 +87,9 @@ for j = confuns
         end
     else
         warning('check if input and input_clip are both necessary. this function is performing actions on both and could run twice as fast if only one of that needs to be conditioned.')
-        inp = zeros(size(inps.input));
-        inpC = zeros(size(inps.input_clip));
-        [~,outf] = j{:}(inps.input(:,1),skelldef);
+        [inpf,outf] = j{:}(inps.input(:,1),skelldef);
+        inp = zeros(size(inpf,1),size(inps.input,2));
+        inpC = zeros(size(inpf,1),size(inps.input_clip,2));
         out = repmat(outf,size(inps.input,2),1);
         outC = repmat(outf,size(inps.input_clip,2),1);
         for k = 1:size(inp,2) % check it

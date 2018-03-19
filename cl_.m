@@ -35,22 +35,22 @@ switch nargin
     useroptions.k = varargin{1};
     useroptions.w = varargin{2};
     useroptions.n = varargin{3};
-    useroptions.cw = inf;
+    useroptions.cw = 0;
     case 2
     useroptions.k = varargin{1};
     useroptions.w = varargin{2};
-    useroptions.cw = inf;
+    useroptions.cw = 0;
     case 1
     useroptions.k = varargin{1};
     useroptions.w = 1;
     warning('Size of window not defined. Using 1. ')
-    useroptions.cw = inf;
+    useroptions.cw = 0;
     case 0 
     useroptions.k = 1;
     warning('Number of neigbours not defined. Using 1. ')
     useroptions.w = 1;
     warning('Size of window not defined. Using 1. ')
-    useroptions.cw = inf;
+    useroptions.cw = 0;
 end
 
 

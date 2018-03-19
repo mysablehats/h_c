@@ -49,7 +49,7 @@ if strcmp(vot,'train')
     for j = 1:length(arq_connect)
         if arq_connect(j).params.PLOTIT %%% this is a mess
             for k = kindex
-                %figure(k)                
+                %figure(k)
                 subplot(max(kindex),length(arq_connect),j*k)
                 hist(gas(k,j).outparams.graph.errorvect)
                 if k>1
@@ -105,7 +105,7 @@ for j = whatIlabel
             %gas(j).nodesl = arq_connect(j).params.label.prototypelabelling(ssvot.gas(j).bestmatchbyindex, gas(j).nodes,ssvot.gas(j).inputs.input,ssvot.gas(j).y); %%% new labelling scheme
             %gas(j).nodesl = labeling(gas(j).nodes,ssvot.gas(j).inputs.input,ssvot.gas(j).y);
             if isempty(ssvot.gas(j).bestmatchbyindex)&&(strcmp(arq_connect(j).method,'knn')||strcmp(arq_connect(j).method,'svm'))
-                gas(j).nodesl = ssvot.gas(j).y; % the line below seems to work, but this is faster.                 
+                gas(j).nodesl = ssvot.gas(j).y; % the line below seems to work, but this is faster.
             elseif strcmp(arq_connect(j).method,'gng')||strcmp(arq_connect(j).method,'gwr')||strcmp(arq_connect(j).method,'som')||strcmp(arq_connect(j).method,'kme')%and others that will use prototypes
                 gas(j).nodesl = arq_connect(j).params.label.prototypelabelling(ssvot.gas(j).bestmatchbyindex, gas(j).nodes,ssvot.gas(j).inputs.input,ssvot.gas(j).y); %%% new labelling scheme
             end
@@ -119,7 +119,9 @@ for j = whatIlabel
             %%%%%%%% that I am not using anymore, since once that is
             %%%%%%%% redone, we have to also remove the double classifier!
             dbgmsg('Predicting based on model. This may take a while')
-            [weirdthingy, score] = predict(gas(j).model,ssvot.gas(j).inputs.input.'  );            %%% we still dont have the classes the way we want because matlab is annoying 
+            % weirdthingy = predict(gas(j).model,ssvot.gas(j).inputs.input.'  );            %%% we still dont have the classes the way we want because matlab is annoying
+            [weirdthingy, score] = predict(gas(j).model,ssvot.gas(j).inputs.input.'  );            %%% we still dont have the classes the way we want because matlab is annoying
+            
             %i should set the distances, shouldn't I? not even for the KNN
             try
                 ssvot.gas.distances = sum(score.');
@@ -130,7 +132,7 @@ for j = whatIlabel
             if ~isfield(ssvot.gas(j), 'bestmatchbyindex')||isempty(ssvot.gas(j).bestmatchbyindex)
                 warning('bestmatch by index is not set!!! .IDX property will be empty as well!')
             end
-            gas(j).IDX = ssvot.gas(j).bestmatchbyindex;  
+            gas(j).IDX = ssvot.gas(j).bestmatchbyindex;
             %%% now, i believe i had this problem before, so i believe
             %%% there is in my code this function, but I can't seem to find
             %%% it, so coding it again
@@ -139,14 +141,14 @@ for j = whatIlabel
             
             %%% demonstration that what we wanted to do is sound: uncomment
             %%% to run
-%             aaaaaa = labeller(gas(j).nodesl, ssvot.gas(j).bestmatchbyindex);
-%             [~,newlabels] = max(gas(j).nodesl);
-%             model = fitcknn(gas(j).nodes.', newlabels.');
-%             bbbbb = predict(model,ssvot.gas(1).inputs.input  );
-%             [~,asdfg] = max(aaaaaa);
-%             all(asdfg' == bbbbb) %%% outputs one, so we have the same results with our function than with using a knn. qed (??? not really...)
-%             %%% old labeller used bestmatched gas nodes 
-%             ssvot.gas(j).class = labeller(gas(j).nodesl, ssvot.gas(j).bestmatchbyindex);
+            %             aaaaaa = labeller(gas(j).nodesl, ssvot.gas(j).bestmatchbyindex);
+            %             [~,newlabels] = max(gas(j).nodesl);
+            %             model = fitcknn(gas(j).nodes.', newlabels.');
+            %             bbbbb = predict(model,ssvot.gas(1).inputs.input  );
+            %             [~,asdfg] = max(aaaaaa);
+            %             all(asdfg' == bbbbb) %%% outputs one, so we have the same results with our function than with using a knn. qed (??? not really...)
+            %             %%% old labeller used bestmatched gas nodes
+            %             ssvot.gas(j).class = labeller(gas(j).nodesl, ssvot.gas(j).bestmatchbyindex);
         end
     else
         traindist = c_dist(ssvot); %%%% maybe I should compare with this for better results. first trial won't have it though.
@@ -166,7 +168,7 @@ for j = whatIlabel
                 end
                 [ocv,ma] = findoptimalcutoffvalue({pg(:).c},{pg(:).i});
                 %[ocv,ma] = findoptimalcutoffvalue(cd,id);
-
+                
             end
         end
         ssvot = ssvotbt; %%% so many potential errors... :(

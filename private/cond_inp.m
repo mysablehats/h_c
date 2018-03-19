@@ -10,33 +10,45 @@ oups = inps;
 oy = iy;
 odist = idist;
 for i = 1:length(conds)
-    switch conds{i}
-        case 'ms'
-            confuns{i} = @mirrorsagittal; 
-            oy = [iy iy];
-            odist = [idist idist];
-            oups.input_ends = [inps.input_ends inps.input_ends];
-            if ~isempty(inps.oldwhotokill)
-                error('Oldwhotokill is being used and the sagittal mirroring was not prepared to deal with it. It is probably just a matter of repeating the indexes with an offset, but this was not implemented and the algorithm will fail.')
-            else 
-                oups.oldwhotokill = inps.oldwhotokill; 
-            end
-            % do these mirrored data require a new index or not? At the
-            % moment i don't think so, so i will just copy them over
-            if 1
-                oups.index = [inps.index inps.index];                
-            else % the alternative is
-                oups.index = [inps.index inps.index+size(inps.index,2)];
-            end
-            oups.awk = inps.awk;
-        case 'rd'
-            confuns{i} = @removedoubled;
-            skelldef.repeat = 'last';
-        case 'rds'
-            confuns{i} = @removedoubled;
-            skelldef.repeat = 'zeros';
-        otherwise
-            error('wrong argument in cond_inpu: unrecognized conditioning procedure')
+    if isa(conds{i},'char')
+        switch conds{i}
+            case 'ms'
+                confuns{i} = @mirrorsagittal;
+                oy = [iy iy];
+                odist = [idist idist];
+                oups.input_ends = [inps.input_ends inps.input_ends];
+                if ~isempty(inps.oldwhotokill)
+                    error('Oldwhotokill is being used and the sagittal mirroring was not prepared to deal with it. It is probably just a matter of repeating the indexes with an offset, but this was not implemented and the algorithm will fail.')
+                else
+                    oups.oldwhotokill = inps.oldwhotokill;
+                end
+                % do these mirrored data require a new index or not? At the
+                % moment i don't think so, so i will just copy them over
+                if 1
+                    oups.index = [inps.index inps.index];
+                else % the alternative is
+                    oups.index = [inps.index inps.index+size(inps.index,2)];
+                end
+                oups.awk = inps.awk;
+            case 'rd'
+                confuns{i} = @removedoubled;
+                skelldef.repeat = 'last';
+                if i<length(conds)&&isa(conds{i+1},'numeric')
+                    skelldef.clippingwindow = conds{i+1};
+                else
+                    error('Required clipping window size in arq_connect! if you dont want it to clip, set it to zero')
+                end
+            case 'rds'
+                confuns{i} = @removedoubled;
+                skelldef.repeat = 'zeros';
+                if i<length(conds)&&isa(conds{i+1},'numeric')
+                    skelldef.clippingwindow = conds{i+1};
+                else
+                    error('Required clipping window size in arq_connect! if you dont want it to clip, set it to zero')
+                end
+            otherwise
+                error('wrong argument in cond_inp: unrecognized conditioning procedure')
+        end
     end
 end
 skelldef.ic = @inv_core;
@@ -102,7 +114,7 @@ function [inpk,out] = mirrorsagittal(inpk,skelldef)
  inpk = reshape(inpks,[],1);
 end
 function [outk, out] = removedoubled(inpk,skelldef)
-out = nan;
+%out = nan;
 outk(1) = inpk(1);
 j = 1;
 for i = 2:length(inpk)
@@ -124,6 +136,14 @@ try
 outk = [outk.';fillermat];
 catch
     disp('hi')
+end
+if length(repm)>skelldef.clippingwindow
+    out = 1; %element completed the sequence with skeletons
+else
+    out = 0; %element did not completely fill sequence
+end
+if skelldef.clippingwindow~=0
+    outk = outk(1:skelldef.clippingwindow);
 end
 %error('not implemented yet')
 end

@@ -10,12 +10,15 @@ for j = 1:1+p:actionstructure.end
             flag_set = true;
             warning('cant complete the whole vector! Will pad with nans. This is an important warning!!!! It will have very unpredictable consequences in end results!!!!!!!!!!!!!!!!!!!!!!')
         end
+        indexpadding = @(x,y)nan(x,y);
+        distpadding = @(x,y)nan(x,y);
+        posepadding = @(x,y)zeros(x,y);
         %%% better options for this padding include a mean, or maybe
         %%% just continue the structure over itself and loop it around,
         %%% like a regular tiling
-        actionstructure.index = [actionstructure.index nan(size(actionstructure.index,1),q)];
-        actionstructure.dist = [actionstructure.dist nan(size(actionstructure.dist,1),q)];
-        actionstructure.pose = [actionstructure.pose nan(size(actionstructure.pose,1),q)];
+        actionstructure.index = [actionstructure.index indexpadding(size(actionstructure.index,1),q)];
+        actionstructure.dist = [actionstructure.dist distpadding(size(actionstructure.dist,1),q)];
+        actionstructure.pose = [actionstructure.pose posepadding(size(actionstructure.pose,1),q)];
         %%% this should not be horrible because m will not flip over to
         %%% a new sample, since we didn't update the ends
         %break

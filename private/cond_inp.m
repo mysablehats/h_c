@@ -97,13 +97,12 @@ for j = confuns
             [inpC(:,k),outC(k)] = j{:}(inps.input_clip(:,k),skelldef);
         end
     end
-    switch j{:}
-        case @mirrorsagittal
-            oups.input_clip = [inps.input_clip inpC];
-            oups.input = [inps.input inp];
-        case @removedoubled
-            oups.input_clip = inpC;
-            oups.input = inp;        
+    if isequal(j{:}, @mirrorsagittal)
+        oups.input_clip = [inps.input_clip inpC];
+        oups.input = [inps.input inp];
+    else %@removedoubled
+        oups.input_clip = inpC;
+        oups.input = inp;
     end
 end
 end

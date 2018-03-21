@@ -48,7 +48,11 @@ classdef Simvargas < Simvar
                         %%doesn't exist anymore... this will break all the time if I
                         %%insist on using workers for different things.
                         %worker = 1;
+                        try
                         combinedval(:,:,gaslayer) = simvartrial.metrics(worker, gaslayer,i).val + combinedval(:,:,gaslayer);
+                        catch
+                            warning('Could not set combined value. Has this layer been labeled?')
+                        end
                     end
                 end
             end

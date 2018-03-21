@@ -8,7 +8,7 @@ for j = 1:1+p:actionstructure.end
     if sizeofchunk>size(actionstructure.pose,2)
         if ~flag_set
             flag_set = true;
-            warning('cant complete the whole vector! Will pad with nans. This is an important warning!!!! It will have very unpredictable consequences in end results!!!!!!!!!!!!!!!!!!!!!!')
+            dbgmsg('Can''t complete the whole vector! Will pad with nans (or zeros, or something else). This will happen every time, you concatenate samples: you will either loose some samples or generate this kind of error.')
         end
         indexpadding = @(x,y)nan(x,y);
         distpadding = @(x,y)nan(x,y);

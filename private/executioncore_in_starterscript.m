@@ -14,8 +14,11 @@ function a = executioncore_in_starterscript(arq_connect, ss)
 
 metrics = struct('confusions',[],'conffig',[],'outparams',[]);
 
-%whatIlabel = 1:length(ss.gas); %change this series for only the last value to label only the last gas
-whatIlabel = length(ss.gas); %change this series for only the last value to label only the last gas
+whatIlabel = 1:length(ss.gas); %change this series for only the last value to label only the last gas
+%whatIlabel = length(ss.gas); %change this series for only the last value
+%to label only the last gas -> noooooot working! a bunch of things will
+%break and you will get NaNs as a result, just label everything and be done
+%with it. 
 
 %%% end of gas structures region
 

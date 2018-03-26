@@ -11,7 +11,7 @@ oy = iy;
 odist = idist;
 for i = 1:length(conds)
     if isa(conds{i},'char')
-        switch conds{i}
+        switch conds{i}(1:2)
             case 'ms'
                 confuns{i} = @mirrorsagittal;
                 oy = [iy iy];
@@ -30,17 +30,27 @@ for i = 1:length(conds)
                     oups.index = [inps.index inps.index+size(inps.index,2)];
                 end
                 oups.awk = inps.awk;
+                if size(conds{i})==2
+                    skelldef.mirrorfun = @mirrorx;
+                else
+                    switch conds{i}(3:end)
+                        case 'u'
+                            skelldef.mirrorfun = @mirrorx_u;
+                        case 'd'
+                            skelldef.mirrorfun = @mirrorx_d;
+                        otherwise
+                            error('hmm...')
+                    end
+                end
             case 'rd'
                 confuns{i} = @removedoubled;
-                skelldef.repeat = 'last';
-                if i<length(conds)&&isa(conds{i+1},'numeric')
-                    skelldef.clippingwindow = conds{i+1};
+                if size(conds{i})==2
+                    skelldef.repeat = 'last';
+                elseif strcmp(conds{i}(3),'s')
+                    skelldef.repeat = 'zeros';
                 else
-                    error('Required clipping window size in arq_connect! if you dont want it to clip, set it to zero')
+                    error('unknown conditioning procedure')
                 end
-            case 'rds'
-                confuns{i} = @removedoubled;
-                skelldef.repeat = 'zeros';
                 if i<length(conds)&&isa(conds{i+1},'numeric')
                     skelldef.clippingwindow = conds{i+1};
                 else

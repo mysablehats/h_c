@@ -127,9 +127,16 @@ try
         cacc = [outcomes(i).b.a cacc];
     end
     cacc = mean(cacc);
-    sendfinishjobmail('Classifier finished',['maximum accuracy achieved:' num2str(cacc)],passwd)
+    if length(dbstack)>1
+        %% we are being called from inside a function, we don't want to send a ton of emails, do we?
+    else
+        sendfinishjobmail('Classifier finished',['warning: results may be innacurate. approx. maximum accuracy achieved:' num2str(cacc)],passwd)
+    end
 catch ME
-    disp(ME)
+    disp(ME.message)
+    disp(ME.stack(1))
     sendfinishjobmail('error!',['failed when running. check console output for more details. Reason:' ME.message  ],passwd)
+    assignin('base', 'ans', ME)
+    error('Failed. check error messages')    
 end
 %combineoutcomes %%broken.

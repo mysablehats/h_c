@@ -1,6 +1,8 @@
+function sendfinishjobmail(assunto, msgmsg, password)
 
 mail = 'frederico.klein@plymouth.ac.uk';    % Replace with your email address
 
+%password = '';          % Replace with your email password
 
 server = 'smtps.plymouth.ac.uk';     % Replace with your SMTP server
 

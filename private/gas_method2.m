@@ -8,7 +8,7 @@ sstgasj.name = arq_connect.name;
 sstgasj.method = arq_connect.method;
 sstgasj.layertype = arq_connect.layertype;
 arq_connect.params.layertype = arq_connect.layertype;
-arq_connect.params.skelldef.currlayer = arq_connect.layertype; %%% i am copying this everywhere, i should probably put it in a more convinient place. also this is also being overwritten now 
+arq_connect.params.skelldef.currlayer = arq_connect.layertype; %%% i am copying this everywhere, i should probably put it in a more convinient place. also this is also being overwritten now
 
 %% Choosing the right input for this layer
 % This calls the function set input that chooses what will be written on the .inputs variable. It also handles the sliding window concatenations and saves the .input_ends properties, so that this can be done recursevely.
@@ -39,35 +39,50 @@ switch arq_connect.method
             [sstgasj.nodes, sstgasj.edges, sstgasj.outparams, sstgasj.gasgas] = gas_wrapper(sstv.gas(j).inputs.input_clip,arq_connect);
             %%%% POS-MESSAGE
             dbgmsg('Finished working on gas: ''',sstgasj.name,''' (', num2str(j),') with method: ',sstgasj.method ,'.Num of nodes reached:',num2str(sstgasj.outparams.graph.nodesvect(end)),' for process:',num2str(labindex),0)
-        end               
-        %% Best-matching units
-        % The last part is actually finding the best matching units for the gas.
-        % This is a simple procedure where we just find from the gas units (nodes
-        % or vectors, as you wish to call them), which one is more like our input.
-        % It is a filter of sorts, and the bestmatch matrix is highly repetitive.
-        
-        % I questioned if I actually need to compute this matrix here or maybe
-        % inside the setinput function. But I think this doesnt really matter.
-        % Well, for the last gas it does make a difference, since these units will
-        % not be used... Still I will  not fix it unless I have to.
-        %PRE MESSAGE
-        dbgmsg('Finding best matching units for gas: ''',sstgasj.name,''' (', num2str(j),') for process:',num2str(labindex),0)
-        [sstv.gas(j).distances(k,:), ~, sstv.gas(j).bestmatchbyindex(k,:)] = genbestmmatrix(sstgasj.nodes, sstv.gas(j).inputs.input, sstv.gas(j).inputs.awk, sstv.gas(j).distances(k,:), arq_connect.layertype, arq_connect.q, arq_connect.params.distancetype, sstgasj.gasgas); %assuming the best matching node always comes from initial dataset!
+        end
         
     case 'som'
         [sstgasj.nodes, sstgasj.edges, sstgasj.outparams, sstgasj.gasgas, sstv.gas(j).distances(k,:), sstv.gas(j).bestmatchbyindex(k,:)] = som_wrapper(sstv.gas(j).inputs.input_clip, arq_connect);
         warning('maybe undefined variables')
     case 'knn'
-        sstgasj.nodes = sstv.gas(j).inputs.input_clip;
-        warning('maybe undefined variables')     
+        if strcmp(vot, 'train')
+            sstgasj.nodes = sstv.gas(j).inputs.input_clip;
+%             sstv.gas(j).bestmatchbyindex(k,:) = sstv.gas(j).inputs.index; %%% this will break because the indexing is wrong and this should work for tensors as well...
+            %%% and input distances are the same as outputdistances.
+            %warning('maybe undefined variables')
+        end
     case 'kme'
-         dbgmsg('Running K-means algorithm with ', num2str(arq_connect.params.nodes),' nodes.',1)
-         [ sstv.gas(j).bestmatchbyindex(k,:), nodesnodes, ~,  distdist ] = kmeans(sstv.gas(j).inputs.input_clip.', arq_connect.params.nodes  );
-         sstgasj.nodes = nodesnodes.';
-         sstv.gas(j).distances(k,:) = min(distdist.');
-         %[ sstv.gas(j).bestmatchbyindex(k,:), sstgasj.nodes, ~, distdist ] = kmeans(sstv.gas(j).inputs.input_clip.', arq_connect.params.nodes  );
+        if strcmp(vot, 'train')
+            dbgmsg('Running K-means algorithm with ', num2str(arq_connect.params.nodes),' nodes.',1)
+            [ sstv.gas(j).bestmatchbyindex(k,:), nodesnodes, ~,  distdist ] = kmeans(sstv.gas(j).inputs.input_clip.', arq_connect.params.nodes  );
+            sstgasj.nodes = nodesnodes.';
+            sstv.gas(j).distances(k,:) = min(distdist.');
+        end
+        %[ sstv.gas(j).bestmatchbyindex(k,:), sstgasj.nodes, ~, distdist ] = kmeans(sstv.gas(j).inputs.input_clip.', arq_connect.params.nodes  );
     otherwise
-        error('method nod defined.')
+        error('method not defined.')
+end
+%% Best-matching units
+% The last part is actually finding the best matching units for the gas.
+% This is a simple procedure where we just find from the gas units (nodes
+% or vectors, as you wish to call them), which one is more like our input.
+% It is a filter of sorts, and the bestmatch matrix is highly repetitive.
+
+% I questioned if I actually need to compute this matrix here or maybe
+% inside the setinput function. But I think this doesnt really matter.
+% Well, for the last gas it does make a difference, since these units will
+% not be used... Still I will  not fix it unless I have to.
+%PRE MESSAGE
+if ~(strcmp(arq_connect.method,'kme')&&strcmp(vot, 'train'))
+    dbgmsg('Finding best matching units for gas: ''',sstgasj.name,''' (', num2str(j),') for process:',num2str(labindex),0)
+    %   [sstv.gas(j).distances(k,:), sstv.gas(j).bestmatchbyindex(k,:)] = genbestmmatrix2(sstgasj.nodes, sstv.gas(j).inputs.input, sstv.gas(j).distances(k,:), arq_connect.params.distancetype); %assuming the best matching node always comes from initial dataset!
+    
+    [distdist, sstv.gas(j).bestmatchbyindex(k,:)] = pdist2(sstgasj.nodes', sstv.gas(j).inputs.input_clip', arq_connect.params.distancetype.metric,'Smallest',1); %assuming the best matching node always comes from initial dataset!
+    if arq_connect.params.distancetype.cum %%% accumulate the distance. maybe creates a better metric?
+        sstv.gas(j).distances(k,:) = distdist + sstv.gas(j).distances(k,:);
+    else
+        sstv.gas(j).distances(k,:) = distdist;
+    end
 end
 
 %% Post-conditioning function

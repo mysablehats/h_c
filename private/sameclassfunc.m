@@ -104,7 +104,7 @@ for j = whatIlabel
         if strcmp(vot,'train')
             %gas(j).nodesl = arq_connect(j).params.label.prototypelabelling(ssvot.gas(j).bestmatchbyindex, gas(j).nodes,ssvot.gas(j).inputs.input,ssvot.gas(j).y); %%% new labelling scheme
             %gas(j).nodesl = labeling(gas(j).nodes,ssvot.gas(j).inputs.input,ssvot.gas(j).y);
-            if isempty(ssvot.gas(j).bestmatchbyindex)&&(strcmp(arq_connect(j).method,'knn')||strcmp(arq_connect(j).method,'svm'))
+            if (strcmp(arq_connect(j).method,'knn')||strcmp(arq_connect(j).method,'svm'))
                 gas(j).nodesl = ssvot.gas(j).y; % the line below seems to work, but this is faster.
             elseif strcmp(arq_connect(j).method,'gng')||strcmp(arq_connect(j).method,'gwr')||strcmp(arq_connect(j).method,'som')||strcmp(arq_connect(j).method,'kme')%and others that will use prototypes
                 gas(j).nodesl = arq_connect(j).params.label.prototypelabelling(ssvot.gas(j).bestmatchbyindex, gas(j).nodes,ssvot.gas(j).inputs.input,ssvot.gas(j).y); %%% new labelling scheme

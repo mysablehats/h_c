@@ -1,4 +1,4 @@
-function [ oups, oy, odist ] = cond_inp( inps,iy, idist, conds, skelldef )
+function [ oups, oy, odist,skelldef ] = cond_inp( inps,iy, idist, conds, skelldef )
 %cond_inp Conditions input data for each layer of the classifier
 %   This function is supposed to read arq_conn and go through all the
 %   conditioning arguments and apply them to the input after it is
@@ -9,6 +9,21 @@ confuns = [];
 oups = inps;
 oy = iy;
 odist = idist;
+if length(conds)>1
+    for i = 1:length(conds)
+        [ inps, iy, idist,skelldef ] = cond_inp( inps,iy, idist, conds(i), skelldef );
+    end
+    oups = inps;
+    oy = iy;
+    odist = idist;
+    return 
+end
+%i = 1; 
+if isempty(conds)
+   return
+elseif  isa(conds{1},'cell')
+     conds = conds{1};    
+end
 for i = 1:length(conds)
     if isa(conds{i},'char')
         switch conds{i}(1:2)
@@ -30,21 +45,24 @@ for i = 1:length(conds)
                     oups.index = [inps.index inps.index+size(inps.index,2)];
                 end
                 oups.awk = inps.awk;
-                if size(conds{i})==2
+                if size(conds{i},2)==2
                     skelldef.mirrorfun = @mirrorx;
+                    skelldef.ic = @inv_core; %%%% this is the normal version that flips with lower and upper body
                 else
                     switch conds{i}(3:end)
                         case 'u'
                             skelldef.mirrorfun = @mirrorx_u;
+                            skelldef.ic = @inv_core; %%%% this should have an upper body version
                         case 'd'
                             skelldef.mirrorfun = @mirrorx_d;
+                            skelldef.ic = @inv_core; %%%% and a body version
                         otherwise
                             error('hmm...')
                     end
                 end
             case 'rd'
                 confuns{i} = @removedoubled;
-                if size(conds{i})==2
+                if size(conds{i},2)==2
                     skelldef.repeat = 'last';
                 elseif strcmp(conds{i}(3),'s')
                     skelldef.repeat = 'zeros';
@@ -56,14 +74,24 @@ for i = 1:length(conds)
                 else
                     error('Required clipping window size in arq_connect! if you dont want it to clip, set it to zero')
                 end
+            case {'lu','ru','ll','rl','to'}
+                skelldef.ic = @inv_limbs;
+                skelldef.limbs = conds{i}(1:2);
+                confuns{i} = @otherms;
             otherwise
                 error('wrong argument in cond_inp: unrecognized conditioning procedure')
         end
     end
 end
-skelldef.ic = @inv_core;
+
 for j = confuns
     dbgmsg(['Applying ' j ' to input'])
+    if isequal(j{:}, @mirrorsagittal)
+          skelldef.ic = @inv_core; %%%% this is the normal version that flips with lower and upper body
+    end
+    if isequal(j{:}, @otherms)
+          skelldef.ic = @inv_limbs; %%%% this is the normal version that flips with lower and upper body
+    end
     if isequal(inps.input,inps.input_clip)        
         [inpf,outf] = j{:}(inps.input(:,1),skelldef);
         out = repmat(outf,size(inps.input,2),1);
@@ -117,6 +145,16 @@ for j = confuns
 end
 end
 function [inpk,out] = mirrorsagittal(inpk,skelldef)
+%%% old notation says this should be a tensor. since i am not getting the
+%%% layer type, i will not try to guess what this is. for velocities also
+%%% this will be completely messed up, since i should actually create a
+%%% angle of shift vector from positions and use that to flip velocities. 
+%%% Actually the whole angle vector might be interesting to create, since I
+%%% want to know if that carries a lot of information or not. 
+[inpks,out] =cond_MS_(reshape(inpk,[],3),skelldef);
+ inpk = reshape(inpks,[],1);
+end
+function [inpk,out] = otherms(inpk,skelldef)
 %%% old notation says this should be a tensor. since i am not getting the
 %%% layer type, i will not try to guess what this is. for velocities also
 %%% this will be completely messed up, since i should actually create a
